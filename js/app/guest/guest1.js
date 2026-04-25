@@ -29,47 +29,45 @@ export const guest = (() => {
     /**
      * @returns {void}
      */
-const countDownDate = () => {
+    const countDownDate = () => {
+        const now = new Date();
+        const count = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).getTime();
 
-    const count = new Date("2026-05-15T10:00:00").getTime();
+        /**
+         * @param {number} num 
+         * @returns {string}
+         */
+        const pad = (num) => num < 10 ? `0${num}` : `${num}`;
 
-    const pad = (num) => num < 10 ? `0${num}` : `${num}`;
+        const day = document.getElementById('day');
+        const hour = document.getElementById('hour');
+        const minute = document.getElementById('minute');
+        const second = document.getElementById('second');
 
-    const day = document.getElementById('day');
-    const hour = document.getElementById('hour');
-    const minute = document.getElementById('minute');
-    const second = document.getElementById('second');
+        const updateCountdown = () => {
+            const distance = Math.abs(count - Date.now());
 
-    const updateCountdown = () => {
-        const distance = count - Date.now(); // ❗ TANPA Math.abs
+            day.textContent = pad(
+                Math.floor(distance / (1000 * 60 * 60 * 24))
+            );
 
-        if (distance <= 0) {
-            day.textContent = "00";
-            hour.textContent = "00";
-            minute.textContent = "00";
-            second.textContent = "00";
-            return;
-        }
+            hour.textContent = pad(
+                Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+            );
 
-        day.textContent = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
+            minute.textContent = pad(
+                Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+            );
 
-        hour.textContent = pad(
-            Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-        );
+            second.textContent = pad(
+                Math.floor((distance % (1000 * 60)) / 1000)
+            );
 
-        minute.textContent = pad(
-            Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-        );
+            util.timeOut(updateCountdown, 1000 - (Date.now() % 1000));
+        };
 
-        second.textContent = pad(
-            Math.floor((distance % (1000 * 60)) / 1000)
-        );
-
-        util.timeOut(updateCountdown, 1000 - (Date.now() % 1000));
+        updateCountdown();
     };
-
-    updateCountdown();
-};
 
     /**
      * @returns {void}
